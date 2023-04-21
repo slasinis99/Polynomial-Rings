@@ -76,3 +76,4 @@ def increment_polynomials(p1: list, p2: list, mod: int, key: list = [0,0]) -> No
             else: return
 
 print(len(find_solutions(2,6,[0])))
+
