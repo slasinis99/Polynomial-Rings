@@ -74,6 +74,3 @@ def increment_polynomials(p1: list, p2: list, mod: int, key: list = [0,0]) -> No
         if p2[key[1]] == 0:
             if key[1] < len(p2)-1: increment_polynomials(p1,p2,mod,[key[0],key[1]+1])
             else: return
-
-print(len(find_solutions(2,6,[0])))
-
