@@ -14,7 +14,7 @@ def find_units(degree: int, mod: int):
         print(f'\t{print_poly(pair[0])}, {print_poly(pair[1])}')
     return units
 
-def find_solutions(degree: int, mod: int, product: list):
+def find_solutions(degree: int, mod: int, product: list) -> list:
     p1 = [0]*(degree+1)
     p2 = [0]*(degree+1)
     solutions = []
@@ -74,3 +74,23 @@ def increment_polynomials(p1: list, p2: list, mod: int, key: list = [0,0]) -> No
         if p2[key[1]] == 0:
             if key[1] < len(p2)-1: increment_polynomials(p1,p2,mod,[key[0],key[1]+1])
             else: return
+
+class Polynomial():
+
+    def __init__(self, coefficients: list):
+        self._coefficients = [i for i in coefficients]
+        while self._coefficients[len(self._coefficients)-1] == 0:
+            self._coefficients.pop(len(self._coefficients)-1)
+        self._degree = len(self._coefficients)-1
+
+    def __str__(self):
+        s = ''
+        for i, coefficient in enumerate(reversed(self._coefficients)):
+            if coefficient != 0:
+                if i == 0: s += f'{coefficient}x^{len(self._coefficients)-1-i}'
+                elif i < len(self._coefficients)-1: s += f' + {coefficient}x^{len(self._coefficients)-1-i}'
+                else: s += f' + {coefficient}'
+        return s
+
+p = Polynomial([1,2,0,5,0,1])
+print(p)
