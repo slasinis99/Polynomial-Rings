@@ -77,10 +77,11 @@ def increment_polynomials(p1: list, p2: list, mod: int, key: list = [0,0]) -> No
 
 class Polynomial():
 
-    def __init__(self, coefficients: list):
+    def __init__(self, coefficients: list, truncate: bool = False):
         self._coefficients = [i for i in coefficients]
-        while self._coefficients[len(self._coefficients)-1] == 0:
-            self._coefficients.pop(len(self._coefficients)-1)
+        if truncate:
+            while self._coefficients[len(self._coefficients)-1] == 0:
+                self._coefficients.pop(len(self._coefficients)-1)
         self._degree = len(self._coefficients)-1
 
     def __str__(self):
@@ -91,6 +92,15 @@ class Polynomial():
                 elif i < len(self._coefficients)-1: s += f' + {coefficient}x^{len(self._coefficients)-1-i}'
                 else: s += f' + {coefficient}'
         return s
+    
+    def increment(self, mod: int, key: list = [0]):
+        self._coefficients[key] = (self._coefficients+1) % mod
+        if self._coefficients[key] == 0: 
+            if key[0] < len(self._coefficients)-1:
+                self.increment(mod,[key[0]+1])
+            else:
+                for i in range(self._coefficients):
+                    self._coefficients[i] = 0
 
 def _product(p1: Polynomial, p2: Polynomial, mod: int = 0) -> Polynomial:
     p = [0]*(len(p1._coefficients)+len(p2._coefficients))
@@ -117,3 +127,14 @@ def multiply_polynomials(polynomials: list, mod: int = 0):
         p = _product(p, polynomials[i],mod)
 
     return p
+
+def find_solutions(polynomial: Polynomial, mod: int = 0):
+    sol = polynomial._coefficients
+    deg = polynomial._degree
+
+    p1 = Polynomial([0]*(deg+1))
+    p2 = Polynomial([0]*(deg+1))
+
+    p1.increment(mod)
+    while p1._coefficients != [0]*(deg+1) or p2._coefficients != [0]*(deg+1):
+        return
