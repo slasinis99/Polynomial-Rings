@@ -92,23 +92,28 @@ class Polynomial():
                 else: s += f' + {coefficient}'
         return s
 
-def multiply_polynomials(polynomials: list[Polynomial], mod: int = 0) -> Polynomial:
-    product = [0]*(sum([len(i._coefficients) for i in polynomials]))
+def _product(p1: Polynomial, p2: Polynomial, mod: int = 0) -> Polynomial:
+    p = [0]*(len(p1._coefficients)+len(p2._coefficients))
 
-    #Set the product equal to the first polynomial
-    for i, coeff in enumerate(polynomials[0]._coefficients): product[i] = coeff
+    p1c = p1._coefficients
+    p2c = p2._coefficients
 
-    #Now multiply the product by the rest of the polynomials
-    for poly in polynomials[1:]:
-        new_p = [0]*len(product)
-        for m, a in enumerate(product):
-            for n, b in enumerate(poly._coefficients):
-                new_p[m+n] += a*b
-        product = new_p
-    #Perform the modulus if supplied
-    if (mod != 0):
-        for i in range(len(product)):
-            product[i] = product[i] % mod
+    for m, a in enumerate(p1c):
+        for n, b in enumerate(p2c):
+            p[m+n] += a*b
+    if mod != 0:
+        for i in range(len(p)):
+            p[i] = p[i] % mod
     
-    return Polynomial(product)
+    return Polynomial(p)
 
+def multiply_polynomials(polynomials: list, mod: int = 0):
+    if len(polynomials) < 2: raise ValueError('too few polyomials!')
+    #Multiply the first two polynomial
+    p = _product(polynomials[0],polynomials[1])
+
+    #Now multiply the rest
+    for i in range(2,len(polynomials)):
+        p = _product(p, polynomials[i],mod)
+
+    return p
