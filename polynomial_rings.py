@@ -92,5 +92,23 @@ class Polynomial():
                 else: s += f' + {coefficient}'
         return s
 
-p = Polynomial([1,2,0,5,0,1])
-print(p)
+def multiply_polynomials(polynomials: list[Polynomial], mod: int = 0) -> Polynomial:
+    product = [0]*(sum([len(i._coefficients) for i in polynomials]))
+
+    #Set the product equal to the first polynomial
+    for i, coeff in enumerate(polynomials[0]._coefficients): product[i] = coeff
+
+    #Now multiply the product by the rest of the polynomials
+    for poly in polynomials[1:]:
+        new_p = [0]*len(product)
+        for m, a in enumerate(product):
+            for n, b in enumerate(poly._coefficients):
+                new_p[m+n] += a*b
+        product = new_p
+    #Perform the modulus if supplied
+    if (mod != 0):
+        for i in range(len(product)):
+            product[i] = product[i] % mod
+    
+    return Polynomial(product)
+
