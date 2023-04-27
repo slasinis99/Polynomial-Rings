@@ -90,7 +90,8 @@ class Polynomial():
         s = ''
         for i, coefficient in enumerate(reversed(self._coefficients)):
             if coefficient != 0:
-                if s == '': s += f'{coefficient}x^{len(self._coefficients)-1-i}'
+                if s == '' and i == len(self._coefficients)-1: s += f'{coefficient}'
+                elif s == '': s += f'{coefficient}x^{len(self._coefficients)-1-i}'
                 elif i < len(self._coefficients)-1: s += f' + {coefficient}x^{len(self._coefficients)-1-i}'
                 else: s += f' + {coefficient}'
         return s
@@ -108,13 +109,16 @@ class Polynomial():
         return True
     
     def increment(self, mod: int, key: list = [0]):
-        self._coefficients[key] = (self._coefficients+1) % mod
-        if self._coefficients[key] == 0: 
+        self._coefficients[key[0]] = (self._coefficients[key[0]]+1) % mod
+        if self._coefficients[key[0]] == 0: 
             if key[0] < len(self._coefficients)-1:
                 self.increment(mod,[key[0]+1])
             else:
-                for i in range(self._coefficients):
+                for i in range(len(self._coefficients)):
                     self._coefficients[i] = 0
+    
+    def copy(self) -> Polynomial:
+        new = Polynomial(self._coefficients.copy())
 
 def _product(p1: Polynomial, p2: Polynomial, mod: int = 0) -> Polynomial:
     p = [0]*(len(p1._coefficients)+len(p2._coefficients))
@@ -142,15 +146,27 @@ def multiply_polynomials(polynomials: list, mod: int = 0):
 
     return p
 
-def find_solutions(polynomial: Polynomial, mod: int = 0):
-    sol = polynomial._coefficients
-    deg = polynomial._degree
+def find_solutions(polynomial: Polynomial, mod: int = 0, degree: int = -1) -> list:
+    pairs = []
+    if degree == -1:
+        deg = polynomial._degree
+    else: deg = degree
 
     p1 = Polynomial([0]*(deg+1))
     p2 = Polynomial([0]*(deg+1))
 
     p1.increment(mod)
     while p1._coefficients != [0]*(deg+1) or p2._coefficients != [0]*(deg+1):
+        # print(f'Testing : ({p1})({p2})')
+        if polynomial.equals(multiply_polynomials([p1,p2],mod)):
+            pairs.append([p1.copy(), p2.copy()])
+            print(f'({p1})({p2}) = {multiply_polynomials([p1,p2],mod)}')
+        p1.increment(mod)
+        if p1._coefficients == [0]*(deg+1):
+            p2.increment(mod)
         
-        return
+    return pairs
 
+poly = Polynomial([1])
+
+find_solutions(poly, 10, 2)
