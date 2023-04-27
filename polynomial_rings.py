@@ -187,9 +187,23 @@ def polynomial_divison(dividend: Polynomial, divisor: Polynomial) -> Polynomial:
     
     return Polynomial(reversed(quo),True), Polynomial(reversed(dend),True)
 
-p1 = Polynomial([1,2,0,0,5,6])
-print(p1)
-p2 = Polynomial([4,2])
-print(p2)
-quo, rem = polynomial_divison(p1,p2)
-print(f"quo = {quo}, rem = {rem}")
+def find_root(poly: Polynomial, mod: int = 0):
+    return
+
+# p1 = Polynomial([1,2,0,0,5,6])
+# print(p1)
+# p2 = Polynomial([4,2])
+# print(p2)
+# quo, rem = polynomial_divison(p1,p2)
+# print(f"quo = {quo}, rem = {rem}")
+
+# def q12(n: int):
+#     p = Polynomial([0,0,0])
+#     p.increment(n)
+#     while(p._coefficients != [0]*3):
+#         for i in range(0,n):
+#             #print(f'{p} , x = {i} , {sum([((i**u)*j)%n for u,j in enumerate(p._coefficients)])}')
+#             if sum([((i**u)*j)%n for u,j in enumerate(p._coefficients)])%n == 0 and p._coefficients[2] == 1:
+#                 print(f'{p} , x = {i}')
+#                 break
+#         p.increment(n)
