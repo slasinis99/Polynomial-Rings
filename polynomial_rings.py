@@ -167,7 +167,3 @@ def find_solutions(polynomial: Polynomial, mod: int = 0, degree: int = -1) -> li
             p2.increment(mod)
         
     return pairs
-
-poly = Polynomial([1])
-
-find_solutions(poly, 10, 2)
