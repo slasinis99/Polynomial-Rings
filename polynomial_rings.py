@@ -169,7 +169,27 @@ def find_solutions(polynomial: Polynomial, mod: int = 0, degree: int = -1) -> li
     return pairs
 
 def polynomial_divison(dividend: Polynomial, divisor: Polynomial) -> Polynomial:
-    dend = reversed(dividend._coefficients.copy())
-    div = reversed(divisor._coefficients.copy())
+    dend = dividend._coefficients.copy()
+    div = divisor._coefficients.copy()
+    dend.reverse()
+    div.reverse()
 
+    slot = 0
+    quo = []
+    while slot < len(dividend._coefficients) - len(divisor._coefficients):
+        coef = dend[slot] / div[0]
+        quo.append(coef)
+        for i in range(len(divisor._coefficients)):
+            dend[slot+i] -= div[i]*coef
+        slot += 1
+        print(quo)
+        print(dend)
     
+    return Polynomial(reversed(quo),True), Polynomial(reversed(dend),True)
+
+p1 = Polynomial([1,2,3,4,5,6])
+print(p1)
+p2 = Polynomial([4,2])
+print(p2)
+quo, rem = polynomial_divison(p1,p2)
+print(f"quo = {quo}, rem = {rem}")
