@@ -136,7 +136,7 @@ def _product(p1: Polynomial, p2: Polynomial, mod: int = 0) -> Polynomial:
     
     return Polynomial(p)
 
-def multiply_polynomials(polynomials: list, mod: int = 0):
+def polynomial_multiplication(polynomials: list, mod: int = 0):
     if len(polynomials) < 2: raise ValueError('too few polyomials!')
     #Multiply the first two polynomial
     p = _product(polynomials[0],polynomials[1],mod)
@@ -159,11 +159,17 @@ def find_solutions(polynomial: Polynomial, mod: int = 0, degree: int = -1) -> li
     p1.increment(mod)
     while p1._coefficients != [0]*(deg+1) or p2._coefficients != [0]*(deg+1):
         # print(f'Testing : ({p1})({p2})')
-        if polynomial.equals(multiply_polynomials([p1,p2],mod)):
+        if polynomial.equals(polynomial_multiplication([p1,p2],mod)):
             pairs.append([p1.copy(), p2.copy()])
-            print(f'({p1})({p2}) = {multiply_polynomials([p1,p2],mod)}')
+            print(f'({p1})({p2}) = {polynomial_multiplication([p1,p2],mod)}')
         p1.increment(mod)
         if p1._coefficients == [0]*(deg+1):
             p2.increment(mod)
         
     return pairs
+
+def polynomial_divison(dividend: Polynomial, divisor: Polynomial) -> Polynomial:
+    dend = reversed(dividend._coefficients.copy())
+    div = reversed(divisor._coefficients.copy())
+
+    
