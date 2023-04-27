@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 def find_units(degree: int, mod: int):
     p1 = [0]*(degree+1)
     p2 = [0]*(degree+1)
@@ -88,10 +90,22 @@ class Polynomial():
         s = ''
         for i, coefficient in enumerate(reversed(self._coefficients)):
             if coefficient != 0:
-                if i == 0: s += f'{coefficient}x^{len(self._coefficients)-1-i}'
+                if s == '': s += f'{coefficient}x^{len(self._coefficients)-1-i}'
                 elif i < len(self._coefficients)-1: s += f' + {coefficient}x^{len(self._coefficients)-1-i}'
                 else: s += f' + {coefficient}'
         return s
+    
+    def equals(self, p: Polynomial) -> bool:
+        p1 = self._coefficients
+        p2 = p._coefficients
+        if len(p1) < len(p2):
+            p1, p2 = p2, p1
+        for i in range(len(p1)):
+            if i < len(p2):
+                if p1[i] != p2[i]: return False
+            else:
+                if p1[i] != 0: return False
+        return True
     
     def increment(self, mod: int, key: list = [0]):
         self._coefficients[key] = (self._coefficients+1) % mod
@@ -120,7 +134,7 @@ def _product(p1: Polynomial, p2: Polynomial, mod: int = 0) -> Polynomial:
 def multiply_polynomials(polynomials: list, mod: int = 0):
     if len(polynomials) < 2: raise ValueError('too few polyomials!')
     #Multiply the first two polynomial
-    p = _product(polynomials[0],polynomials[1])
+    p = _product(polynomials[0],polynomials[1],mod)
 
     #Now multiply the rest
     for i in range(2,len(polynomials)):
@@ -137,4 +151,6 @@ def find_solutions(polynomial: Polynomial, mod: int = 0):
 
     p1.increment(mod)
     while p1._coefficients != [0]*(deg+1) or p2._coefficients != [0]*(deg+1):
+        
         return
+
