@@ -104,13 +104,11 @@ def polynomial_divison(dividend: Polynomial, divisor: Polynomial) -> Polynomial:
         for i in range(len(divisor._coefficients)):
             dend[slot+i] -= div[i]*coef
         slot += 1
-        #print(quo)
-        #print(dend)
     
     return Polynomial(reversed(quo),True), Polynomial(reversed(dend),True)
 
 def find_root(poly: Polynomial, mod: int = 0):
-    return
+    pass
 
 def main():
     p1 = Polynomial([1]*21)
