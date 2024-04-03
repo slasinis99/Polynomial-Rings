@@ -19,6 +19,32 @@ class Polynomial():
                 else: s += f' + {coefficient}'
         return s
     
+    def __mul__(self, p2: Polynomial):
+        p = [0]*(len(self._coefficients)+len(p2._coefficients))
+        p1c = self._coefficients
+        p2c = p2._coefficients
+        for m, a in enumerate(p1c):
+            for n, b in enumerate(p2c):
+                p[m+n] += a*b
+        return Polynomial(p)
+    
+    def __getitem__(self, s):
+        if isinstance(s, int):
+            c = [0]*len(self._coefficients)
+            c[s] = 1
+            return Polynomial(c)
+        elif isinstance(s, slice):
+            if s.start is None: start = 0
+            else: start = s.start
+            if s.stop is None: stop = -1
+            else: stop = s.stop
+            if s.step is None: step = 1
+            else: step = s.step
+            c = [0]*len(self._coefficients)
+            for i in range(start, stop, step):
+                c[i] = self._coefficients[i]
+            return Polynomial(c)
+
     def equals(self, p: Polynomial) -> bool:
         p1 = self._coefficients
         p2 = p._coefficients
@@ -110,13 +136,36 @@ def polynomial_divison(dividend: Polynomial, divisor: Polynomial) -> Polynomial:
 def find_root(poly: Polynomial, mod: int = 0):
     pass
 
+def poly_gf(pwr: int, max_pwr: int) -> Polynomial:
+    """Creates a polynomial from the geometric series of the form 1 / (1 - x^n) where n is the pwr.
+
+    Args:
+        pwr (int): Power attached to x
+        max_pwr (int): Highest Degree term to create series to
+
+    Returns:
+        Polynomial: Polynomial created from the series expansion
+    """
+    c = [0]*(1 + max_pwr)
+    c[0] = 1
+    for i in range(0, 1 + max_pwr, pwr):
+        c[i] = 1
+    return Polynomial(c)
+
 def main():
-    p1 = Polynomial([1]*21)
-    p2 = Polynomial([1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1])
-    p3 = Polynomial([1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0])
-    p4 = Polynomial([1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1])
-    p6 = Polynomial([1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0])
-    print(polynomial_multiplication([p1,p2,p3,p4,p6]))
+    '''
+    Example for when the center is 12
+    Proper divisors: 1, 2, 3, 4, 6
+    We create the Power series for each divisor below to the 100th power and compute the product
+    We then display the first 101 coefficients as those are where the accuracy terminates
+    '''
+    p1 = poly_gf(1, 100)
+    p2 = poly_gf(2, 100)
+    p3 = poly_gf(3, 100)
+    p4 = poly_gf(4, 100)
+    p6 = poly_gf(6, 100)
+    p = p1*p2*p3*p4*p6
+    print(p[0:101])
 
 if __name__ == '__main__':
     main()
