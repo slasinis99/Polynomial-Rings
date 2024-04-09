@@ -2,6 +2,7 @@
 #         DEPRECATED         #
 ##############################
 from __future__ import annotations
+from time import time
 
 class Polynomial():
 
@@ -156,6 +157,7 @@ def poly_gf(pwr: int, max_pwr: int) -> Polynomial:
     return Polynomial(c)
 
 def enumerate_partitions(s: int, l: list[int]):
+    t = time()
     divisors = sorted(l.copy())
     div_to_i = {}
     for i, d in enumerate(divisors):
@@ -198,6 +200,8 @@ def enumerate_partitions(s: int, l: list[int]):
                 lead = lead[0:min_index]
                 lead.append(divisors[div_to_i[min_term]+1])
     print(count)
+    print(f'Total time: {time()-t} seconds')
+    return count
 
 
 def main():
@@ -214,7 +218,7 @@ def main():
     # p6 = poly_gf(6, 100)
     # p = p1*p2*p3*p4*p6
     # print(p[0:101])
-    enumerate_partitions(11, [1,2,3,4,6])
+    enumerate_partitions(125, [1,2,3])
 
 if __name__ == '__main__':
     main()
