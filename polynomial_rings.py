@@ -3,6 +3,16 @@
 ##############################
 from __future__ import annotations
 from time import time
+from sympy import divisors
+from matplotlib import pyplot
+from functools import reduce
+
+def GCD(a, b):
+
+    if b == 0:
+        return a
+    else:
+        return GCD(b, a % b)
 
 class Polynomial():
 
@@ -156,7 +166,7 @@ def poly_gf(pwr: int, max_pwr: int) -> Polynomial:
         c[i] = 1
     return Polynomial(c)
 
-def enumerate_partitions(s: int, l: list[int]):
+def enumerate_partitions(s: int, l: list[int], prnt: bool = False, filter: bool = False):
     t = time()
     divisors = sorted(l.copy())
     div_to_i = {}
@@ -164,24 +174,42 @@ def enumerate_partitions(s: int, l: list[int]):
         div_to_i[d] = i
     lead = []
     count = 1
-    print(f'1{" + 1"*(s-1)}')
+    if prnt: print(f'1{" + 1"*(s-1)}')
     for d in divisors[1:]:
         lead = [d]
         while True:
             #While this lead is valid, we want to
-            count += 1
-            to_print = ''
-            for i, part in enumerate(lead):
-                if i < len(lead)-1:
-                    to_print += f'{part} + '
-                else:
-                    to_print += f'{part}'
-            for i in range(0, s-sum(lead)):
-                if len(lead) == 0 and i == 0:
-                    to_print += f'1'
-                else:
-                    to_print += f' + 1'
-            print(to_print)
+            if filter and sum(lead) == s:
+                if reduce(GCD, sorted(lead.copy())) == 1:
+                    count += 1
+                    if prnt:
+                        to_print = ''
+                        for i, part in enumerate(lead):
+                            if i < len(lead)-1:
+                                to_print += f'{part} + '
+                            else:
+                                to_print += f'{part}'
+                        for i in range(0, s-sum(lead)):
+                            if len(lead) == 0 and i == 0:
+                                to_print += f'1'
+                            else:
+                                to_print += f' + 1'
+                        print(to_print)
+            else:
+                count += 1
+                if prnt:
+                    to_print = ''
+                    for i, part in enumerate(lead):
+                        if i < len(lead)-1:
+                            to_print += f'{part} + '
+                        else:
+                            to_print += f'{part}'
+                    for i in range(0, s-sum(lead)):
+                        if len(lead) == 0 and i == 0:
+                            to_print += f'1'
+                        else:
+                            to_print += f' + 1'
+                    print(to_print)
             #Check if the smallest divisor larger than 1 could be appended to the lead
             if sum(lead) + divisors[1] <= s:
                 #If so, we need to append it and run the loop again
@@ -199,8 +227,9 @@ def enumerate_partitions(s: int, l: list[int]):
                     break
                 lead = lead[0:min_index]
                 lead.append(divisors[div_to_i[min_term]+1])
-    print(count)
-    print(f'Total time: {time()-t} seconds')
+    if prnt:
+        print(count)
+        print(f'Total time: {time()-t} seconds')
     return count
 
 
@@ -211,14 +240,8 @@ def main():
     We create the Power series for each divisor below to the 100th power and compute the product
     We then display the first 101 coefficients as those are where the accuracy terminates
     '''
-    # p1 = poly_gf(1, 100)
-    # p2 = poly_gf(2, 100)
-    # p3 = poly_gf(3, 100)
-    # p4 = poly_gf(4, 100)
-    # p6 = poly_gf(6, 100)
-    # p = p1*p2*p3*p4*p6
-    # print(p[0:101])
-    enumerate_partitions(125, [1,2,3])
+    enumerate_partitions(40, [1,5], prnt=True, filter=False)
+            
 
 if __name__ == '__main__':
     main()
