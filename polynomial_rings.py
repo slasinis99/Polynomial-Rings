@@ -1,3 +1,6 @@
+##############################
+#         DEPRECATED         #
+##############################
 from __future__ import annotations
 
 class Polynomial():
@@ -131,7 +134,7 @@ def polynomial_divison(dividend: Polynomial, divisor: Polynomial) -> Polynomial:
             dend[slot+i] -= div[i]*coef
         slot += 1
     
-    return Polynomial(reversed(quo),True), Polynomial(reversed(dend),True)
+    return Polynomial(reversed(quo),True)#, Polynomial(reversed(dend),True)
 
 def find_root(poly: Polynomial, mod: int = 0):
     pass
@@ -159,13 +162,16 @@ def main():
     We create the Power series for each divisor below to the 100th power and compute the product
     We then display the first 101 coefficients as those are where the accuracy terminates
     '''
-    p1 = poly_gf(1, 100)
-    p2 = poly_gf(2, 100)
-    p3 = poly_gf(3, 100)
-    p4 = poly_gf(4, 100)
-    p6 = poly_gf(6, 100)
-    p = p1*p2*p3*p4*p6
-    print(p[0:101])
+    # p1 = poly_gf(1, 100)
+    # p2 = poly_gf(2, 100)
+    # p3 = poly_gf(3, 100)
+    # p4 = poly_gf(4, 100)
+    # p6 = poly_gf(6, 100)
+    # p = p1*p2*p3*p4*p6
+    # print(p[0:101])
+    p1 = Polynomial([2,0,6,0,1])
+    p2 = Polynomial([5,0,1])
+    print(polynomial_divison(p1, p2)[0])
 
 if __name__ == '__main__':
     main()
