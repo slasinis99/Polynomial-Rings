@@ -155,6 +155,51 @@ def poly_gf(pwr: int, max_pwr: int) -> Polynomial:
         c[i] = 1
     return Polynomial(c)
 
+def enumerate_partitions(s: int, l: list[int]):
+    divisors = sorted(l.copy())
+    div_to_i = {}
+    for i, d in enumerate(divisors):
+        div_to_i[d] = i
+    lead = []
+    count = 1
+    print(f'1{" + 1"*(s-1)}')
+    for d in divisors[1:]:
+        lead = [d]
+        while True:
+            #While this lead is valid, we want to
+            count += 1
+            to_print = ''
+            for i, part in enumerate(lead):
+                if i < len(lead)-1:
+                    to_print += f'{part} + '
+                else:
+                    to_print += f'{part}'
+            for i in range(0, s-sum(lead)):
+                if len(lead) == 0 and i == 0:
+                    to_print += f'1'
+                else:
+                    to_print += f' + 1'
+            print(to_print)
+            #Check if the smallest divisor larger than 1 could be appended to the lead
+            if sum(lead) + divisors[1] <= s:
+                #If so, we need to append it and run the loop again
+                lead.append(divisors[1])
+            else:
+                #Otherwise, we need to find the smallest divisor that has a valid promotion
+                #Note, we cannot promote to a divisor larger than the head of the lead
+                min_term = lead[0]
+                min_index = 0
+                for i in range(1, len(lead)):
+                    if lead[i] < max(divisors) and lead[i] < min_term and sum(lead[0:i]) + divisors[div_to_i[lead[i]]+1] <= s:
+                        min_term = lead[i]
+                        min_index = i
+                if min_index == 0:
+                    break
+                lead = lead[0:min_index]
+                lead.append(divisors[div_to_i[min_term]+1])
+    print(count)
+
+
 def main():
     '''
     Example for when the center is 12
@@ -169,9 +214,7 @@ def main():
     # p6 = poly_gf(6, 100)
     # p = p1*p2*p3*p4*p6
     # print(p[0:101])
-    p1 = Polynomial([2,0,6,0,1])
-    p2 = Polynomial([5,0,1])
-    print(polynomial_divison(p1, p2)[0])
+    enumerate_partitions(11, [1,2,3,4,6])
 
 if __name__ == '__main__':
     main()
